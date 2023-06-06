@@ -10,6 +10,8 @@ const mobile = isOnMobile()
 it only needs to be triggered once */
 
 export abstract class Connector{
+  /** Connector id */
+  abstract readonly id: string
   /** Connector name */
   abstract readonly name: WalletNames
   /** Whether connector is usable */
@@ -19,7 +21,7 @@ export abstract class Connector{
   /**Deeplink to open explorer on mobile */
   abstract readonly deeplink?: URL
   
-  protected getProvider: Promise<EIP1193Provider> | EIP1193Provider
+  getProvider: Promise<EIP1193Provider> | EIP1193Provider
   
   constructor(getProvider: ()=> Promise<EIP1193Provider> | EIP1193Provider) {
     this.ready = false

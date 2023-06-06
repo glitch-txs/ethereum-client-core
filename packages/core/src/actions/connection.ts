@@ -1,9 +1,11 @@
 import { web3Store } from "../store/web3store"
-import { Init, WalletNames } from "../types"
+import { ConnectArgs, Init, WalletNames } from "../types"
 import { KEY_WALLET } from "../utils/constants"
 import { Connector } from "./connectors/base"
 
-export async function connectW3(selectedWallet: WalletNames | Connector): Promise<any>{
+export async function connectW3(options: ConnectArgs): Promise<any>{
+
+  const { connector: selectedWallet } = options
 
   if(typeof selectedWallet !== "string") return await selectedWallet.connect()
 

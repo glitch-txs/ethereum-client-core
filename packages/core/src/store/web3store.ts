@@ -1,7 +1,8 @@
 import { createStore } from 'zustand/vanilla'
 import { subscribeWithSelector } from 'zustand/middleware'
-import { Chain } from '../types'
+import { Address } from '../types'
 import { Connector } from '../actions/connectors/base'
+import { Chain } from '@wagmi/chains'
 
 interface Web3Store {
   /*We need a time for the WC init to load
@@ -14,7 +15,7 @@ interface Web3Store {
   isProvider: boolean
   /**Open installation website if wallet provider is not found */
   onboard: boolean
-  userAccount: string
+  userAccount: Address | ''
   chainId: number | null
   chains: Chain[]
   errorMessage: string

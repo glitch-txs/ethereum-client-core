@@ -1,4 +1,5 @@
 import { Connector } from "./actions/connectors/base"
+import type { Chain } from '@wagmi/chains'
 
 export type URL = `https://${string}`
 
@@ -9,19 +10,28 @@ export type Init = {
   chains: Chain[]
 }
 
-export type Chain = {
-  chainId:`0x${string}`
-  chainName:string
-  nativeCurrency?:{
-    name:string
-    symbol:string
-    decimals:number
-  }
-  rpcUrls: string[]
-  blockExplorerUrls?:string[]
-  iconUrls?:string[]
-}
-
 export type WalletNames = 'Coinbase' | 'MetaMask' | 'Phantom' | 'Trust Wallet' | 'WalletConnect' | 'Injected'
 
 export type EIP1193Provider = any
+
+export interface ModalConnectorsOpts {
+  chains: Chain[]
+  version: 1 | 2
+  projectId: string
+}
+
+export interface WalletConnectProviderOpts {
+  projectId: string
+}
+
+export type ConnectorId = 'injected' | 'metaMask' | 'walletConnect' | 'walletConnectV1'
+
+export type ConnectArgs = {
+  connector: Connector
+  chainId?: Number
+}
+
+export type Network = {
+  chain?: Chain & { unsupported?: boolean }
+  chains: Chain[]
+}
