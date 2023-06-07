@@ -1,20 +1,10 @@
 import { web3Store } from "../store/web3store"
-import { ConnectArgs, Init, WalletNames } from "../types"
+import { ConnectArgs, Init } from "../types"
 import { KEY_WALLET } from "../utils/constants"
-import { Connector } from "./connectors/base"
 
 export async function connectW3(options: ConnectArgs): Promise<any>{
 
-  const { connector: selectedWallet } = options
-
-  if(typeof selectedWallet !== "string") return await selectedWallet.connect()
-
-  const [connector] = web3Store.getState().connectors.filter(c => c.name === selectedWallet)
-
-  if(!connector){
-    web3Store.setState((state)=>({errorMessage: `${selectedWallet} connector not found!`}))
-    throw Error(`Connector not found, add the ${selectedWallet} connector in the w3init function`)
-  }
+  const { connector, chainId } = options
 
   return await connector.connect()
 }

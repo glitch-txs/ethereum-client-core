@@ -12,11 +12,13 @@ export class EthereumClient {
   private readonly connectors: Connector[] = []
   public walletConnectVersion = 2
   public readonly chains: Chain[] = []
+  private init: number = 0
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public constructor(connectors: Connector[], chains: Chain[]) {
     this.connectors = connectors
     this.chains = chains
+    web3Store.setState({ connectors, chains })
   }
 
   // -- private ------------------------------------------- //
@@ -28,20 +30,18 @@ export class EthereumClient {
     return { isV2: true, connector }
   }
 
-  private async connectWalletConnectV1(connector: Connector, onUri: (uri: string) => void) {
-    return
-  }
-
   private async connectWalletConnectV2(connector: Connector, onUri: (uri: string) => void) {
-    await connector.getProvider()
+    if(this.init === 0){
+      await connector.init()
+    }
+    this.init = -1
 
     return new Promise<void>(resolve => {
-      connector.once('message', event => {
-        if (event.type === 'display_uri') {
-          onUri(event.data as string)
-          resolve()
-        }
-      })
+      connector.getProvider().on("display_uri", async (uri: any) => {
+        onUri(uri as string)
+        console.log(uri)
+        resolve()
+      });
     })
   }
 
@@ -64,12 +64,13 @@ export class EthereumClient {
   }
 
   public async connectWalletConnect(onUri: (uri: string) => void, chainId?: number) {
-    const { connector, isV2 } = this.getWalletConnectConnectors()
+    const { connector } = this.getWalletConnectConnectors()
     const options: ConnectArgs = { connector }
     if (chainId) {
       options.chainId = chainId
     }
     const handleProviderEvents = this.connectWalletConnectV2.bind(this)
+    console.log("triggered connect")
 
     return Promise.all([connectW3(options), handleProviderEvents(connector, onUri)])
   }

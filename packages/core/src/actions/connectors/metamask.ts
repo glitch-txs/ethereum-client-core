@@ -3,6 +3,7 @@ import { isWindow } from "../../utils/isWindow"
 import { Connector } from "./base"
 
 export class MetaMask extends Connector {
+  readonly id: string
   readonly name: WalletNames
   readonly install: URL
   readonly deeplink: URL
@@ -23,6 +24,7 @@ export class MetaMask extends Connector {
 
     super(getProvider)
 
+    this.id = 'MetaMask'
     this.name = 'MetaMask'
     this.install = 'https://metamask.io/download/'
     this.deeplink =`https://metamask.app.link/dapp/${isWindow()}`

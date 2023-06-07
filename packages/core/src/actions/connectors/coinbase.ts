@@ -5,6 +5,7 @@ import { isWindow } from "../../utils/isWindow"
 import { Connector } from "./base"
 
 export class Coinbase extends Connector {
+  readonly id: string
   readonly name: WalletNames
   readonly install: URL
   readonly deeplink: URL
@@ -30,11 +31,12 @@ export class Coinbase extends Connector {
       })
       const { getState } = web3Store
  
-      return coinbaseWallet.makeWeb3Provider?.(getState().chains[0]?.rpcUrls[0], Number(getState().chains[0]?.chainId))
+      return coinbaseWallet.makeWeb3Provider?.(getState().chains[0]?.rpcUrls[0]?.http[0], Number(getState().chains[0]?.id))
     }
 
     super(getProvider)
 
+    this.id = 'Coinbase'
     this.name = 'Coinbase'
     this.install = 'https://www.coinbase.com/wallet/downloads'
     this.deeplink = `https://go.cb-w.com/dapp?cb_url=${isWindow()}`

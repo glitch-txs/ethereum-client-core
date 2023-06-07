@@ -1,5 +1,5 @@
 {
-  "name": "@glitch-txs/w3",
+  "name": "@glitch-txs/ethereum-client",
   "version": "1.0.4",
   "description": "EVM Wallet Connectors Library",
   "main": "dist/index.js",

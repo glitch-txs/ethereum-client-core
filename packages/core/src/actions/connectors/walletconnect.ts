@@ -5,10 +5,11 @@ import { isWindow } from "../../utils/isWindow"
 import { Connector } from "./base"
 
 export class WalletConnect extends Connector {
+  readonly id: string
   readonly name: WalletNames
   readonly install?: URL
   readonly deeplink?: URL
-  private provider: any
+  provider: any
   private initFailed: boolean
 
   constructor(){
@@ -18,6 +19,7 @@ export class WalletConnect extends Connector {
 
     super(getProvider)
 
+    this.id = 'walletConnect'
     this.name = 'WalletConnect'
     this.initFailed = false
   }
@@ -36,8 +38,8 @@ export class WalletConnect extends Connector {
   
     const provider = await EthereumProvider.init({
       projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
-      chains: web3Store.getState().chains.map(chain => Number(chain.chainId)),
-      showQrModal:true,
+      chains: web3Store.getState().chains.map(chain => Number(chain.id)),
+      showQrModal:false,
       optionalMethods:OPTIONAL_METHODS,
       optionalEvents:OPTIONAL_EVENTS,
       qrModalOptions:{
@@ -93,7 +95,8 @@ export class WalletConnect extends Connector {
 
   async connect() {
     const { setState } = web3Store
-
+    
+    console.log("connect 0", this.ready, this.initFailed)
     if(this.initFailed){
       setState((state)=>({ errorMessage: 'WalletConnect failed to initialize' }))
       return
@@ -105,8 +108,11 @@ export class WalletConnect extends Connector {
     setState((state)=>({isLoading: true}))
     window.removeEventListener('WalletConnect#ready', this.connect)
 
+    console.log("connect 1")
+
     await this.provider.connect().catch(console.error)
 
+    console.log("connect 2")
     const connected = await this.setAccountAndChainId(this.provider)
     if(connected) {
       setState((state)=>({childProvider: this.provider}))

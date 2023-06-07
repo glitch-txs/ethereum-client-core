@@ -10,7 +10,7 @@ const mobile = isOnMobile()
 it only needs to be triggered once */
 
 export abstract class Connector{
-  /** Connector id */
+  /** Connector name */
   abstract readonly id: string
   /** Connector name */
   abstract readonly name: WalletNames
@@ -84,10 +84,10 @@ export abstract class Connector{
       }
   
       /**Request to switch to a default chain */
-      if(getState().chainId !== Number(chains[0]?.chainId)){
+      if(getState().chainId !== Number(chains[0]?.id)){
         await provider.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: chains[0]?.chainId }],
+          params: [{ chainId: chains[0]?.id }],
         }).catch(async (er: any)=>{
           if(er.code === 4902 || er?.data?.originalError?.code == 4902){
               await provider.request({

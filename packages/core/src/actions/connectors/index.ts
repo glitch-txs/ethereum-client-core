@@ -5,8 +5,7 @@ import { TrustWallet } from "./trustwallet"
 import { WalletConnect } from "./walletconnect"
 
 const connectors=()=>[
-  new MetaMask(), 
-  new Coinbase(), 
+  new MetaMask(),
   new TrustWallet(), 
   new WalletConnect(), 
   new Phantom()
